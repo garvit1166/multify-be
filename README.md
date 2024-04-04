@@ -1,6 +1,6 @@
 # Log Watcher
 
-[Log Watcher](/) This application implements a real-time log watching solution using the MERN (MongoDB, Express.js, React.js, Node.js) stack. It allows users to monitor a log file hosted on a remote machine and view updates as they occur without needing to refresh the page
+[Log Watcher](https://multyfi-fe.vercel.app/) This application implements a real-time log watching solution using the MERN (MongoDB, Express.js, React.js, Node.js) stack. It allows users to monitor a log file hosted on a remote machine and view updates as they occur without needing to refresh the page
 
 <Br/>
 
@@ -112,3 +112,8 @@ To optimize for large log files:
 <a id="working-model-ss"></a>
 
 # Working Model Screenshots
+
+![image](https://github.com/garvit1166/multyfi-fe/assets/92694655/f0d0646d-b4ea-406b-b8ef-ead03e6f78a0)
+
+![image](https://github.com/garvit1166/multyfi-fe/assets/92694655/a79155bf-9471-4525-a11e-405478e14f34)
+

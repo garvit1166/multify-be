@@ -32,7 +32,7 @@ function writeRandomLines(filename, linesCount) {
     for (let i = 0; i < linesCount; i++) {
         data += generateRandomLog() + '\n';
     }
-    fs.writeFile(filename, data, (err) => {
+    fs.appendFile(filename, data, (err) => {
         if (err) {
             console.error('Error writing file:', err);
         } else {

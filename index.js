@@ -1,69 +1,58 @@
-
 const fs = require("fs");
-const express = require('express');
-const { server, wss, app } = require('./websocket.js');
+const express = require("express");
+const { server, wss, app } = require("./websocket.js");
+
+const cors = require("cors");
 app.use(express.json());
 
-const {getLast,getNew} = require('./utils/utils.js');
+const { readLastLines, getNewLinesAdded,sendDataToClient } = require("./utils/utils.js");
 
-let lastLine;
+app.use(cors());
+
 const LOGFILE = "logs";
 
-// app.get('/log', async (req, res) => {
-//     try {
-//         const data = await getLast(LOGFILE);
-//         res.send(JSON.stringify({ filename: LOGFILE, data }));
-//     } catch (error) {
-//         console.error('Error fetching logs:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+let offset = 0;
 
-server.listen(8080, function(){
-    console.log("server listening on http://localhost:8080");
-});
+let fileContent = fs.readFileSync(LOGFILE, "utf8");
+offset = fileContent.split("\n").length;
 
-let connections = [];
 
-wss.on('request', function(request) {
-    console.log("connectd");
-    connections.push(request.accept(null, request.origin));
-});
 
-wss.on('connect', connection => {
-    getLast(LOGFILE)
-    .then(lines => {
-        connection.send(JSON.stringify({ filename: LOGFILE, lines }));
-    })
-    .catch(err => {
-       connection.send(JSON.stringify( err ));
-    });
-    
-    connection.on('close', function(connection) {
-        let i = connections.indexOf(connection);
-        connections.splice(i, 1)
-    });
-});
-
-fs.watchFile(LOGFILE, (curr, prev) => {
-
-    if (curr.ctimeMs == 0) {
-        connections.forEach( c => {
-            c.send(JSON.stringify( { error: "File doesn't exists at the moment." } ));
-        });
-    } else if (curr.mtime !== prev.mtime){
-        getNew(LOGFILE, lastLine)
-        .then(lines => {
-            if (lines.length > 0) {
-                connections.forEach( c => {
-                    c.send(JSON.stringify({ filename: LOGFILE, lines }));
-                });
-            }
-        })
-        .catch(error => {
-            connections.forEach( c => {
-                c.send(JSON.stringify( { error } ));
-            });
-        });
+async function watchFileForChanges(filename) {
+  fs.watch(filename, async (eventType, filename) => {
+    if (eventType === "change") {
+      const {lines,newOffset} = await getNewLinesAdded(LOGFILE, offset);
+      sendDataToClient(lines);
+      offset=newOffset;
     }
+  });
+}
+watchFileForChanges(LOGFILE);
+
+app.get("/log", async (req, res) => {
+  try {
+    const data = await readLastLines(LOGFILE);
+    res.send(JSON.stringify(data));
+  } catch (error) {
+    console.error("Error fetching logs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+server.listen(8080, function () {
+  console.log("server listening on http://localhost:8080");
+});
+
+wss.on("connection", async function connection(ws) {
+  console.log("A new client connected");
+//    way 2 using web socket to send initial data
+//   const data = await readLastLines(LOGFILE);
+//   sendDataToClient(data);
+  ws.on("message", function incoming(message) {
+    console.log("Received message from client:", message);
+  });
+
+  ws.on("close", function close() {
+    console.log("Client disconnected");
+  });
 });

@@ -50,3 +50,9 @@ if (!filename || isNaN(numberOfLines) || numberOfLines <= 0) {
 } else {
     writeRandomLines(filename, numberOfLines);
 }
+
+
+module.exports = {
+    writeRandomLines,
+};
+  

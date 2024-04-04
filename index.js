@@ -11,6 +11,8 @@ const {
   sendDataToClient,
 } = require("./utils/utils.js");
 
+const { writeRandomLines } = require("./random.js");
+
 app.use(cors());
 
 const LOGFILE = "logs";
@@ -35,6 +37,20 @@ app.get("/log", async (req, res) => {
   try {
     const data = await readLastLines(LOGFILE);
     res.send(JSON.stringify(data));
+  } catch (error) {
+    console.error("Error fetching logs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/log", async (req, res) => {
+  try {
+    const noOfLines = req.query.number;
+    const lines = await writeRandomLines(LOGFILE, noOfLines);
+    console.log(lines);
+    res.status(200).json({
+      lines,
+    });
   } catch (error) {
     console.error("Error fetching logs:", error);
     res.status(500).json({ error: "Internal server error" });

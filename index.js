@@ -5,7 +5,11 @@ const { server, wss, app } = require("./websocket.js");
 const cors = require("cors");
 app.use(express.json());
 
-const { readLastLines, getNewLinesAdded,sendDataToClient } = require("./utils/utils.js");
+const {
+  readLastLines,
+  getNewLinesAdded,
+  sendDataToClient,
+} = require("./utils/utils.js");
 
 app.use(cors());
 
@@ -16,14 +20,12 @@ let offset = 0;
 let fileContent = fs.readFileSync(LOGFILE, "utf8");
 offset = fileContent.split("\n").length;
 
-
-
 async function watchFileForChanges(filename) {
   fs.watch(filename, async (eventType, filename) => {
     if (eventType === "change") {
-      const {lines,newOffset} = await getNewLinesAdded(LOGFILE, offset);
+      const { lines, newOffset } = await getNewLinesAdded(LOGFILE, offset);
       sendDataToClient(lines);
-      offset=newOffset;
+      offset = newOffset;
     }
   });
 }
@@ -45,9 +47,9 @@ server.listen(8080, function () {
 
 wss.on("connection", async function connection(ws) {
   console.log("A new client connected");
-//    way 2 using web socket to send initial data
-//   const data = await readLastLines(LOGFILE);
-//   sendDataToClient(data);
+  //    way 2 using web socket to send initial data
+  //   const data = await readLastLines(LOGFILE);
+  //   sendDataToClient(data);
   ws.on("message", function incoming(message) {
     console.log("Received message from client:", message);
   });

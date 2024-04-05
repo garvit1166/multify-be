@@ -117,3 +117,8 @@ To optimize for large log files:
 
 ![image](https://github.com/garvit1166/multyfi-fe/assets/92694655/a79155bf-9471-4525-a11e-405478e14f34)
 
+# Working Model Vedio Demonstration
+
+<video controls src="ScreenRec_2024-04-05 12-40-51.mp4" title="Vedio"></video>
+
+<video controls src="ScreenRec_2024-04-05 12-46-00.mp4" title="Title"></video>

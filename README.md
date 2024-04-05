@@ -119,6 +119,11 @@ To optimize for large log files:
 
 # Working Model Vedio Demonstration
 
-<video controls src="ScreenRec_2024-04-05 12-40-51.mp4" title="Vedio"></video>
 
-<video controls src="ScreenRec_2024-04-05 12-46-00.mp4" title="Title"></video>
+
+
+https://github.com/garvit1166/multyfi-be/assets/92694655/2248e9a7-1315-46ce-a823-b15d5a16fdd9
+
+
+https://github.com/garvit1166/multyfi-be/assets/92694655/68907643-0816-4b7d-9029-cb2d83a01558
+
